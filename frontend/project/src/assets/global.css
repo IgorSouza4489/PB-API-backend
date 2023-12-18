@@ -4,10 +4,13 @@
     --cor-verde: #f85f00;
   }
 
-
+  
+/*
   body{
-    background-image: linear-gradient(to right top, #f85f00, #f85f00, #f85f00, #f85f00, #f85f00, #f96800, #fa7100, #fb7a00, #fc8d00, #fc9f00, #fab100, #f8c200) !important;
+    background-image: linear-gradient(to right top, #f85f00, #f85f00, #f85f00, #f85f00, #f85f00, #f96800, #fa7100, #fb7a00, #fc8d00, #fc9f00, #fab100, #f8c200) ;
   }
+
+*/
 
   html{
     width: 100% !important;
@@ -70,6 +73,7 @@
     font-size: 16px;
   }
   
+
   .form-container {
     
     display: flex;

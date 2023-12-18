@@ -27,7 +27,6 @@
               type="submit"
               id="btn"
               value="Entrar"
-              @click.prevent="showIframe = true"
             />
             <div v-if="showIframe" class="overlay">
               <iframe
@@ -67,7 +66,6 @@ export default {
   methods: {
     async login() {
       this.showIframe = true;
-
       try {
         const response = await api.post("/login", {
           email: this.email,
@@ -75,12 +73,12 @@ export default {
         });
         console.log(response.data);
         this.$router.push({
-          path: "/",
+          path: "/HomePage",
           //query: {id: tipo}
         });
       } catch (error) {
         this.erro = true;
-        //console.error(error);
+        console.error(error);
       }
       setTimeout(() => {
         this.showIframe = false;
@@ -107,5 +105,6 @@ body.overlay {
   align-items: center;
   z-index: 999;
 }
+
 </style>
 

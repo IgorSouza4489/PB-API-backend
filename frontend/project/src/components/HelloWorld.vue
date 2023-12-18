@@ -26,7 +26,7 @@
             <input-form
               label="Data de Nascimento"
               type="date"
-              v-model="dataInicio"
+              v-model="data_nascimento"
               placeholder="Selecione sua data de nascimento"
             />
           </div>
@@ -76,7 +76,7 @@ export default {
       email: "",
       senha: "",
       nome: "",
-      nascimento: "",
+      data_nascimento: "",
       erro: false,
       showIframe: false,
     };
@@ -89,7 +89,7 @@ export default {
         const response = await api.post("/usuarios", {
           nome: this.nome,
           email: this.email,
-          data_nascimento: this.nascimento,
+          data_nascimento:'01/01/2022' /*new Date(this.data_nascimento)*/,
           senha: this.senha,
         });
 
@@ -107,6 +107,7 @@ export default {
       }, 1500);
 
     },
+    
   },
    computed: {
     registraHabilitado() {
@@ -126,6 +127,8 @@ export default {
 body.overlay {
   overflow: hidden; /* Impede a rolagem da página quando o fundo estiver opaco */
 }
+
+
 
 .overlay {
   position: fixed;
