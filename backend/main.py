@@ -1,9 +1,11 @@
 from flask import Flask
 from models import db
 from routes import configure_routes
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
+    CORS(app, origins=['http://localhost:8080'])
     app.config.from_pyfile('config.py')
     db.init_app(app)
     configure_routes(app)
