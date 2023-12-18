@@ -2,32 +2,16 @@
   <div id="container">
     <div id="barraZ">
       <div class="form-container">
-        <form @submit.prevent="register">
+        <form @submit.prevent="login">
           <div class="form-group">
-            <h1>Registrar</h1>
+            <h1>Login</h1>
             <br />
 
-            <input-form
-              label="Nome"
-              type="text"
-              v-model="nome"
-              placeholder="Digite um nome"
-            />
-          </div>
-          <div class="form-group">
             <input-form
               label="Email"
               type="text"
               v-model="email"
-              placeholder="Digite seu email"
-            />
-          </div>
-          <div class="form-group">
-            <input-form
-              label="Data de Nascimento"
-              type="date"
-              v-model="dataInicio"
-              placeholder="Selecione sua data de nascimento"
+              placeholder="Digite um email"
             />
           </div>
           <div class="form-group">
@@ -42,8 +26,8 @@
             <input
               type="submit"
               id="btn"
-              value="Registrar"
-               :disabled="!registraHabilitado"
+              value="Entrar"
+              @click.prevent="showIframe = true"
             />
             <div v-if="showIframe" class="overlay">
               <iframe
@@ -58,13 +42,13 @@
   </div>
 </template>
 
+
 <script>
 import InputForm from "./Form/InputForm.vue";
-
 import api from "./api";
 
 export default {
-  name: "HelloWorld",
+  name: "LoginPage",
   components: {
     InputForm,
   },
@@ -75,53 +59,37 @@ export default {
     return {
       email: "",
       senha: "",
-      nome: "",
-      nascimento: "",
       erro: false,
       showIframe: false,
     };
   },
   created() {},
   methods: {
-    async register() {
-      this.showIframe = true
+    async login() {
+      this.showIframe = true;
+
       try {
-        const response = await api.post("/usuarios", {
-          nome: this.nome,
+        const response = await api.post("/login", {
           email: this.email,
-          data_nascimento: this.nascimento,
           senha: this.senha,
         });
-
         console.log(response.data);
         this.$router.push({
-          path: "/LoginPage",
+          path: "/",
           //query: {id: tipo}
         });
       } catch (error) {
         this.erro = true;
-        console.error(error);
+        //console.error(error);
       }
-        setTimeout(() => {
+      setTimeout(() => {
         this.showIframe = false;
       }, 1500);
-
-    },
-  },
-   computed: {
-    registraHabilitado() {
-      return (
-        this.nome !== "" &&
-        this.email !== "" &&
-        this.dataInicio !== "" &&
-        this.senha !== ""
-      );
     },
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 body.overlay {
   overflow: hidden; /* Impede a rolagem da página quando o fundo estiver opaco */
