@@ -3,8 +3,16 @@ from models import db, Usuario, Postagem
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
-def configure_routes(app):
-    @app.route("/usuarios")
+HTTP_OK = 200
+HTTP_CREATED = 201
+HTTP_NOT_FOUND = 404
+HTTP_BAD_REQUEST = 400
+HTTP_UNAUTHORIZED = 401
+HTTP_SERVER_ERROR = 500
+
+
+def rota_obter_usuarios(app):
+    @app.route("/usuarios", methods=['GET'])
     def obter_usuarios():
         nome = request.args.get('nome')
         email = request.args.get('email')
@@ -15,41 +23,46 @@ def configure_routes(app):
             usuarios = Usuario.query.filter_by(email=email).all()
         else:
             usuarios = Usuario.query.all()
-        
-        usuarios_json = [{
-                            'id': user.id, 'nome': user.nome, 
-                            'email': user.email, 
-                            'data_nascimento': user.data_nascimento
-                        } 
-                        for user in usuarios]
-        return jsonify({'usuarios': usuarios_json}), 201
 
+        usuarios_json = [{
+            'id': user.id, 'nome': user.nome,
+            'email': user.email,
+            'data_nascimento': user.data_nascimento
+        }
+            for user in usuarios]
+        return jsonify({'usuarios': usuarios_json}), HTTP_CREATED
+
+
+def rota_incluir_usuario(app):
     @app.route('/usuarios', methods=['POST'])
     def incluir_usuario():
         try:
             dados_usuario = request.get_json()
-            data_nascimento = datetime.strptime(dados_usuario['data_nascimento'], '%d/%m/%Y').date()
+            data_nascimento = datetime.strptime(
+                dados_usuario['data_nascimento'], '%d/%m/%Y').date()
             senha_hash = generate_password_hash(dados_usuario['senha'])
 
             novo_usuario = Usuario(
-                                    nome=dados_usuario['nome'], 
-                                    email=dados_usuario['email'], 
-                                    data_nascimento=data_nascimento,
-                                    senha=senha_hash)
+                nome=dados_usuario['nome'],
+                email=dados_usuario['email'],
+                data_nascimento=data_nascimento,
+                senha=senha_hash)
 
             db.session.add(novo_usuario)
             db.session.commit()
 
-            return jsonify({'mensagem': 'Usuário incluído com sucesso!'}), 201
+            return jsonify({'mensagem': 'Usuário incluído com sucesso!'}), HTTP_CREATED
         except Exception as e:
-            return jsonify({'erro': str(e)}), 500
+            return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
 
+
+def rota_fazer_login(app):
     @app.route("/login", methods=["POST"])
     def fazer_login():
         dados_login = request.get_json()
 
         if 'email' not in dados_login or 'senha' not in dados_login:
-            return jsonify({'erro': 'E-mail e senha são obrigatórios.'}), 400
+            return jsonify({'erro': 'E-mail e senha são obrigatórios.'}), HTTP_BAD_REQUEST
 
         email = dados_login['email']
         senha = dados_login['senha']
@@ -57,12 +70,14 @@ def configure_routes(app):
         usuario = Usuario.query.filter_by(email=email).first()
 
         if usuario and check_password_hash(usuario.senha, senha):
-            return jsonify({'mensagem': 'Sucesso'}), 200
+            return jsonify({'mensagem': 'Sucesso'}), HTTP_OK
         else:
-            return jsonify({'erro': 'E-mail ou senha incorretos.'}), 401
+            return jsonify({'erro': 'E-mail ou senha incorretos.'}), HTTP_UNAUTHORIZED
 
+
+def rota_obter_postagens(app):
     @app.route('/postagens', methods=['GET'])
-    def obter_postagens_recentes():
+    def obter_postagens():
         id = request.args.get('id')
         nome_autor = request.args.get('nome_autor')
 
@@ -81,8 +96,10 @@ def configure_routes(app):
             'datahora_postagem': postagem.datahora_postagem.strftime("%Y-%m-%d %H:%M:%S")
         } for postagem in postagens]
 
-        return jsonify({'postagens': postagens_json}), 200
+        return jsonify({'postagens': postagens_json}), HTTP_OK
 
+
+def rota_criar_postagem(app):
     @app.route('/postagens', methods=['POST'])
     def criar_postagem():
         try:
@@ -98,10 +115,12 @@ def configure_routes(app):
             db.session.add(nova_postagem)
             db.session.commit()
 
-            return jsonify({'mensagem': 'Postagem criada com sucesso!'}), 201
+            return jsonify({'mensagem': 'Postagem criada com sucesso!'}), HTTP_CREATED
         except Exception as e:
-            return jsonify({'erro': str(e)}), 500
+            return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
 
+
+def rota_excluir_postagem(app):
     @app.route('/postagens/<int:id_postagem>', methods=['DELETE'])
     def excluir_postagem(id_postagem):
         try:
@@ -110,9 +129,18 @@ def configure_routes(app):
             if postagem:
                 db.session.delete(postagem)
                 db.session.commit()
-                return jsonify({'mensagem': 'Postagem excluída com sucesso!'}), 200
+                return jsonify({'mensagem': 'Postagem excluída com sucesso!'}), HTTP_OK
             else:
-                return jsonify({'erro': 'Postagem não encontrada'}), 404
+                return jsonify({'erro': 'Postagem não encontrada'}), HTTP_NOT_FOUND
 
         except Exception as e:
-            return jsonify({'erro': str(e)}), 500
+            return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
+
+
+def configure_routes(app):
+    rota_obter_usuarios(app)
+    rota_incluir_usuario(app)
+    rota_fazer_login(app)
+    rota_obter_postagens(app)
+    rota_criar_postagem(app)
+    rota_excluir_postagem(app)
