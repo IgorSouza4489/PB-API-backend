@@ -137,6 +137,29 @@ def rota_excluir_postagem(app):
             return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
 
 
+def rota_editar_postagem(app):
+    @app.route('/postagens/<int:id_postagem>', methods=['PUT'])
+    def editar_postagem(id_postagem):
+        try:
+            dados_postagem = request.get_json()
+
+            postagem = Postagem.query.get(id_postagem)
+
+            if not postagem:
+                return jsonify({'erro': 'Postagem não encontrada'}), HTTP_NOT_FOUND
+
+            postagem.titulo = dados_postagem.get('titulo', postagem.titulo)
+            postagem.texto = dados_postagem.get('texto', postagem.texto)
+            postagem.nome_autor = dados_postagem.get('nome_autor', postagem.nome_autor)
+
+            db.session.commit()
+
+            return jsonify({'mensagem': 'Postagem editada com sucesso!'}), HTTP_OK
+
+        except Exception as e:
+            return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
+
+
 def configure_routes(app):
     rota_obter_usuarios(app)
     rota_incluir_usuario(app)
@@ -144,3 +167,4 @@ def configure_routes(app):
     rota_obter_postagens(app)
     rota_criar_postagem(app)
     rota_excluir_postagem(app)
+    rota_editar_postagem(app)
