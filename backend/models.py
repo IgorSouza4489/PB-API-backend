@@ -26,4 +26,10 @@ class Postagem(db.Model):
     usuarios_curtiram = db.relationship('Curtida', backref='postagem', lazy='dynamic')
     #Delecao em Cascata
     curtidas = db.relationship('Curtida', backref='postagem_relacionada', cascade='all, delete-orphan')
+    postagens_usuario = db.relationship('PostagemUsuario', backref='postagem_usuario_relacionada', cascade='all, delete-orphan')
 
+
+class PostagemUsuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    postagem_id = db.Column(db.Integer, db.ForeignKey('postagem.id', ondelete='CASCADE'))
