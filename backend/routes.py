@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from models import db, Usuario, Postagem
+from models import db, Usuario, Postagem, Curtida
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -158,6 +158,39 @@ def rota_editar_postagem(app):
 
         except Exception as e:
             return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
+        
+
+def rota_adicionar_curtida(app):
+    @app.route('/postagens/<int:id_postagem>/curtidas', methods=['POST'])
+    def adicionar_curtida(id_postagem):
+        try:
+            # Verifica se a postagem existe
+            postagem = Postagem.query.get(id_postagem)
+            if not postagem:
+                return jsonify({'erro': 'Postagem não encontrada'}), HTTP_NOT_FOUND
+            
+            # Obtém os dados da requisição
+            dados = request.get_json()
+            usuario_id = dados.get('usuario_id')  # Assume-se que o ID do usuário é fornecido na requisição
+            
+            # Verifica se o usuário existe
+            usuario = Usuario.query.get(usuario_id)
+            if not usuario:
+                return jsonify({'erro': 'Usuário não encontrado'}), HTTP_NOT_FOUND
+            
+            # Verifica se o usuário já curtiu a postagem
+            if usuario in postagem.usuarios_curtiram:
+                return jsonify({'mensagem': 'Usuário já curtiu esta postagem'}), HTTP_OK
+            
+            # Adiciona a curtida à postagem
+            curtida = Curtida(usuario_id=usuario_id, postagem_id=id_postagem)
+            db.session.add(curtida)
+            db.session.commit()
+            
+            return jsonify({'mensagem': 'Curtida adicionada com sucesso'}), HTTP_CREATED
+        
+        except Exception as e:
+            return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
 
 
 def configure_routes(app):
@@ -168,3 +201,4 @@ def configure_routes(app):
     rota_criar_postagem(app)
     rota_excluir_postagem(app)
     rota_editar_postagem(app)
+    rota_adicionar_curtida(app)
