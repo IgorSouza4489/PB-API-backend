@@ -51,6 +51,9 @@
                 src="https://lottie.host/embed/4a40d72c-2547-4f2a-909c-2044e6b7717e/xIffzuE3W0.json"
               ></iframe>
             </div>
+            <div id = "lowKey">
+                <a @click="navegarParaLogin" id="">Já tem uma conta? Clique aqui!</a>
+            </div>
           </div>
         </form>
       </div>
@@ -60,7 +63,8 @@
 
 <script>
 import InputForm from "./Form/InputForm.vue";
-
+import { useToast } from "vue-toastification";
+const toast = useToast();
 import api from "./api";
 
 export default {
@@ -94,12 +98,14 @@ export default {
         });
 
         console.log(response.data);
+        toast.success("Conta criada com sucesso!");
         this.$router.push({
           path: "/LoginPage",
           //query: {id: tipo}
         });
       } catch (error) {
         this.erro = true;
+        toast.success("Erro ao criar conta");
         console.error(error);
       }
         setTimeout(() => {
@@ -107,7 +113,9 @@ export default {
       }, 1500);
 
     },
-    
+    navegarParaLogin(){
+      this.$router.push({path: '/LoginPage'})
+    }
   },
    computed: {
     registraHabilitado() {

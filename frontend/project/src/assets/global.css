@@ -1,7 +1,7 @@
 /* styles.css */
 
 :root {
-    --cor-verde: #f85f00;
+    --cor-laranja: #f85f00;
   }
 
   
@@ -40,13 +40,13 @@
   }
   
   h1, h2 {
-    color: var(--cor-verde);
+    color: var(--cor-laranja);
     
   }
 
   #barra {
     height: 5px;
-    background-color: var(--cor-verde);
+    background-color: var(--cor-laranja);
     width: 100%;
     margin-top: -5px; /* Para sobrepor a borda superior do formulário */
   }
@@ -66,7 +66,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
-    color: var(--cor-verde);
+    color: var(--cor-laranja);
   }
   
   option {
@@ -105,7 +105,7 @@
   .form-group label {
     margin-bottom: 5px;
     text-align: left;
-    color: var(--cor-verde);
+    color: var(--cor-laranja);
   }
   
   .form-group input {
@@ -115,7 +115,7 @@
   }
 
   #btn{
-    background-color: var(--cor-verde);
+    background-color: var(--cor-laranja);
     color: rgb(255, 255, 255);
   }
   
@@ -127,3 +127,13 @@
     }
   }
   
+  #lowKey{
+    margin-top: 20px;
+    background-color: transparent;
+    border: 0px;
+    
+  }
+  #lowKey a {
+    color: var(--cor-laranja);
+    cursor: pointer;
+  }

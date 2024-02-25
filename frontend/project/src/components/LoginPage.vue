@@ -45,7 +45,9 @@
 <script>
 import InputForm from "./Form/InputForm.vue";
 import api from "./api";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 export default {
   name: "LoginPage",
   components: {
@@ -66,23 +68,29 @@ export default {
   methods: {
     async login() {
       this.showIframe = true;
+      
       try {
         const response = await api.post("/login", {
           email: this.email,
           senha: this.senha,
         });
         console.log(response.data);
+        setTimeout(() => {
+        this.showIframe = false;
+        toast.success("Seja bem vindo!");
         this.$router.push({
           path: "/HomePage",
           //query: {id: tipo}
         });
+      }, 1500);
+        
       } catch (error) {
         this.erro = true;
+        toast.error("Ocorreu algum erro ao tentar entrar");
+        this.showIframe = false;
         console.error(error);
       }
-      setTimeout(() => {
-        this.showIframe = false;
-      }, 1500);
+      
     },
   },
 };
