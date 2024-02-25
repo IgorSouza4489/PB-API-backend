@@ -1,14 +1,65 @@
 <template>
   <div style="text-align:center !important; ">
+     <div id="sidebar-header">
+    <nav class="navbar navbar-expand-lg navbar-light ">
+  <a class="navbar-brand" href="#">receitas.py</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"><router-link to="/feed">Feed</router-link><span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><router-link to="/minha-conta">Minha Conta</router-link></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><router-link to="/">Minhas Curtidas</router-link></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><router-link to="/">Minhas Receitas</router-link></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" @click="sair" href="#">Sair</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+</div>
+
     <div id="sidebar">
-      <div id="sidebar-header">
-        <h3>coRecs</h3>
+      <div id="sidebar-profile">
+        <a href=""><img src="" alt=""></a>
+        <h5>{{usuario.nome}}</h5>
+        <h5>{{usuario.email}}</h5>
+        <hr>
       </div>
       <div id="sidebar-menu">
         <router-link to="/feed">Feed</router-link>
         <router-link to="/minha-conta">Minha Conta</router-link>
+        <router-link to="/">Minhas Curtidas</router-link>
+        <router-link to="/">Minhas Receitas</router-link>
+
         <button @click="sair">Sair</button>
       </div>
+      
+    </div>
+
+
+      <div id="sidebar2">
+      
+      <div id="sidebar-profile2">
+        <a href=""><img src="" alt=""></a>
+        <h5>Receitas mais curtidas</h5>
+        <hr>
+      </div>
+      <div id="sidebar-menu2">
+        
+
+        
+      </div>
+      
     </div>
 
     <div class="container">
@@ -38,6 +89,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -54,6 +106,11 @@ export default {
     return {
       postagens: [],
       termoPesquisa: "",
+      usuario: {
+        nome: "Igor Santos",
+        idade: 25,
+        email: "igor@gmail.com"
+    },
     };
   },
   mounted() {
@@ -68,6 +125,9 @@ export default {
         console.log(error);
       }
     },
+    async getUserAtual(){
+
+    },
     formatarData(data) {
       const dataObj = new Date(data);
       return `${dataObj.toLocaleDateString()} ${dataObj.toLocaleTimeString()}`;
@@ -75,13 +135,14 @@ export default {
     sair() {
       console.log("Usuário saiu");
     },
+
   },
 };
 </script>
 
 <style scoped>
 .container {
-  max-width: 600px;
+  max-width: min(600px, 100vw);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -89,6 +150,7 @@ export default {
 
 .post {
   border: 1px solid #ccc;
+  background-color: #e2e2e2;
   margin-bottom: 20px;
   padding: 10px;
   border-radius: 8px;
@@ -115,21 +177,31 @@ export default {
 }
 
 #sidebar {
-  background-color: #333;
+  background-color: #ffffff;
   color: white;
-  width: 200px;
+  width: 300px;
   height: 100vh;
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: 5;
   left: 0;
-  display: flex;
   flex-direction: column;
+
+  
 }
 
-#sidebar-header {
+#sidebar-header nav{
   padding: 20px;
   text-align: center;
   background-color: #ff5e00;
+  color: white;
+}
+#sidebar-header .dropdown{
+  float: right;
+  
+}
+#sidebar-header  h3{
+  text-align: left !important;
+  padding-left: 50px;
 }
 
 #sidebar-menu {
@@ -143,15 +215,106 @@ export default {
   color: white;
   text-decoration: none;
   padding: 10px;
-  margin-bottom: 10px;
-  background-color: #444;
+  margin: 10px;
+  background-color: #ff7b00;
+  border-radius: 15px;
+  
   border: none;
   cursor: pointer;
 }
 
 #sidebar-menu a:hover,
 #sidebar-menu button:hover {
-  background-color: #555;
+  background-color: #fc9c43;
+}
+
+#sidebar-profile {
+  
+}
+#sidebar-profile h5{
+  color: #000000;
+  
+}
+
+a{
+  color: white !important;
+}
+
+@media only screen and (min-width: 992px) {
+  #navbarNavDropdown .navbar-nav {
+  display: none;
+  }
+
+}
+
+@media only screen and (max-width: 992px) {
+
+  #sidebar{
+    display: none;
+  }
+  #sidebar2{
+    display: none;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#sidebar2 {
+  background-color: #ffffff;
+  color: white;
+  width: 300px;
+  height: 100vh;
+  position: absolute;
+  top: 5;
+  right: 0;
+  flex-direction: column;
+
+  
+}
+
+
+
+#sidebar-menu2 {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+#sidebar-menu2 a,
+#sidebar-menu2 button {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  margin: 10px;
+  background-color: #ff7b00;
+  border-radius: 15px;
+  
+  border: none;
+  cursor: pointer;
+}
+
+#sidebar-menu2 a:hover,
+#sidebar-menu2 button:hover {
+  background-color: #fc9c43;
+}
+
+#sidebar-profile2 h5{
+  color: #000000;
+  
 }
 
 </style>
