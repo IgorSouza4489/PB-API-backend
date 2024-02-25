@@ -15,6 +15,12 @@
         <a class="nav-link" href="#"><router-link to="/minha-conta">Minha Conta</router-link></a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="#"><router-link to="/">Minhas Curtidas</router-link></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><router-link to="/">Minhas Receitas</router-link></a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" @click="sair" href="#">Sair</a>
       </li>
     </ul>
@@ -23,7 +29,6 @@
 </div>
 
     <div id="sidebar">
-      
       <div id="sidebar-profile">
         <a href=""><img src="" alt=""></a>
         <h5>{{usuario.nome}}</h5>
@@ -33,8 +38,28 @@
       <div id="sidebar-menu">
         <router-link to="/feed">Feed</router-link>
         <router-link to="/minha-conta">Minha Conta</router-link>
+        <router-link to="/">Minhas Curtidas</router-link>
+        <router-link to="/">Minhas Receitas</router-link>
+
         <button @click="sair">Sair</button>
       </div>
+      
+    </div>
+
+
+      <div id="sidebar2">
+      
+      <div id="sidebar-profile2">
+        <a href=""><img src="" alt=""></a>
+        <h5>Receitas mais curtidas</h5>
+        <hr>
+      </div>
+      <div id="sidebar-menu2">
+        
+
+        
+      </div>
+      
     </div>
 
     <div class="container">
@@ -117,7 +142,7 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 600px;
+  max-width: min(600px, 100vw);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -159,8 +184,8 @@ export default {
   position: absolute;
   top: 5;
   left: 0;
-  display: flex;
   flex-direction: column;
+
   
 }
 
@@ -227,6 +252,69 @@ a{
   #sidebar{
     display: none;
   }
+  #sidebar2{
+    display: none;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#sidebar2 {
+  background-color: #ffffff;
+  color: white;
+  width: 300px;
+  height: 100vh;
+  position: absolute;
+  top: 5;
+  right: 0;
+  flex-direction: column;
+
+  
+}
+
+
+
+#sidebar-menu2 {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+#sidebar-menu2 a,
+#sidebar-menu2 button {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  margin: 10px;
+  background-color: #ff7b00;
+  border-radius: 15px;
+  
+  border: none;
+  cursor: pointer;
+}
+
+#sidebar-menu2 a:hover,
+#sidebar-menu2 button:hover {
+  background-color: #fc9c43;
+}
+
+#sidebar-profile2 h5{
+  color: #000000;
+  
 }
 
 </style>
