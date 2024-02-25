@@ -11,12 +11,6 @@ class Usuario(db.Model):
     senha = db.Column(db.String(80), nullable=False)
 
 
-class Curtida(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
-    postagem_id = db.Column(db.Integer, db.ForeignKey('postagem.id'))
-
-
 class Postagem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(80), nullable=False)
@@ -29,7 +23,16 @@ class Postagem(db.Model):
     postagens_usuario = db.relationship('PostagemUsuario', backref='postagem_usuario_relacionada', cascade='all, delete-orphan')
 
 
+# RELACIONAMENTOS
+
+class Curtida(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    postagem_id = db.Column(db.Integer, db.ForeignKey('postagem.id'))
+
+
 class PostagemUsuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     postagem_id = db.Column(db.Integer, db.ForeignKey('postagem.id', ondelete='CASCADE'))
+    

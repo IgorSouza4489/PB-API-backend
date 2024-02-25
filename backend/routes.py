@@ -3,6 +3,7 @@ from models import db, Usuario, Postagem, Curtida, PostagemUsuario
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 HTTP_OK = 200
 HTTP_CREATED = 201
 HTTP_NOT_FOUND = 404
