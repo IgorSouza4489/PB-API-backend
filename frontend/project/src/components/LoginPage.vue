@@ -86,9 +86,8 @@ export default {
         
       } catch (error) {
         this.erro = true;
-        toast.error("Ocorreu algum erro ao tentar entrar");
+        toast.error("Ocorreu algum erro ao tentar entrar, verifique suas credenciais");
         this.showIframe = false;
-        console.error(error);
       }
       
     },
