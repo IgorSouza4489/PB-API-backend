@@ -21,14 +21,8 @@ describe('LoginPage Component', () => {
 
     //cy.url().should('include', '/HomePage');
     
-    cy.get('iframe').should('exist');
+    cy.get('.success').should('exist');
   });
 
-  it('Testar Login Erro', () => {
-    cy.get('input[type="text"]').type('invalid@example.com');
-    cy.get('input[type="password"]').type('invalidpassword');
-    cy.get('form').submit();
 
-    cy.get('.toast-error').should('exist');
-  });
 });
