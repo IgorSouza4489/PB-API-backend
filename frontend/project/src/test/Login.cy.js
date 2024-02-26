@@ -15,7 +15,7 @@ describe('LoginPage Component', () => {
   });
 
   it('Testar Login Certo', () => {
-    cy.get('input[type="text"]').type('igor@gmail.com');
+    cy.get('input[type="text"]').type('lag@gmail.com');
     cy.get('input[type="password"]').type('123');
     cy.get('form').submit();
 
