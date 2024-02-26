@@ -64,9 +64,9 @@
 <script>
 import InputForm from "./Form/InputForm.vue";
 import { useToast } from "vue-toastification";
-const toast = useToast();
 import api from "./api";
 
+const toast = useToast();
 export default {
   name: "HelloWorld",
   components: {
@@ -105,8 +105,7 @@ export default {
         });
       } catch (error) {
         this.erro = true;
-        toast.success("Erro ao criar conta");
-        console.error(error);
+        toast.error("Erro ao criar conta", error);
       }
         setTimeout(() => {
         this.showIframe = false;
@@ -130,10 +129,9 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 body.overlay {
-  overflow: hidden; /* Impede a rolagem da página quando o fundo estiver opaco */
+  overflow: hidden; 
 }
 
 
