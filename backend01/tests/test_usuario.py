@@ -1,4 +1,3 @@
-from app.routes import obter_usuarios
 from run import app
 
 HTTP_OK = 200
