@@ -97,7 +97,7 @@ export default {
 
 <style scoped>
 body.overlay {
-  overflow: hidden; /* Impede a rolagem da página quando o fundo estiver opaco */
+  overflow: hidden; 
 }
 
 .overlay {

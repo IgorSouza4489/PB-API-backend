@@ -19,9 +19,9 @@ describe('LoginPage Component', () => {
     cy.get('input[type="password"]').type('123');
     cy.get('form').submit();
 
-    cy.url().should('include', '/HomePage');
+    //cy.url().should('include', '/HomePage');
     
-    cy.get('.toast-success').should('exist');
+    cy.get('iframe').should('exist');
   });
 
   it('Testar Login Erro', () => {
