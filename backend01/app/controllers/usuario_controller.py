@@ -2,6 +2,7 @@ from flask import jsonify, request
 from app.models import db, Usuario, Postagem, Curtida, PostagemUsuario
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 HTTP_OK = 200
@@ -12,6 +13,7 @@ HTTP_UNAUTHORIZED = 401
 HTTP_SERVER_ERROR = 500
 
 
+@jwt_required()
 def obter_usuarios():
     nome = request.args.get('nome')
     email = request.args.get('email')
@@ -32,6 +34,7 @@ def obter_usuarios():
     return jsonify({'usuarios': usuarios_json}), HTTP_OK
 
 
+@jwt_required()
 def incluir_usuario():
     try:
         dados_usuario = request.get_json()
@@ -53,6 +56,7 @@ def incluir_usuario():
         return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
     
 
+@jwt_required()
 def fazer_login():
     dados_login = request.get_json()
 

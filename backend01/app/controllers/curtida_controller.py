@@ -2,6 +2,7 @@ from flask import jsonify, request
 from app.models import db, Usuario, Postagem, Curtida, PostagemUsuario
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 HTTP_OK = 200
 HTTP_CREATED = 201
@@ -10,6 +11,7 @@ HTTP_BAD_REQUEST = 400
 HTTP_UNAUTHORIZED = 401
 HTTP_SERVER_ERROR = 500
 
+@jwt_required()
 def adicionar_curtida(id_postagem):
     try:
         postagem = Postagem.query.get(id_postagem)
