@@ -33,8 +33,8 @@ def obter_usuarios():
     
     return jsonify({'usuarios': usuarios_json}), HTTP_OK
 
-
-@jwt_required()
+#Deprecated
+#@jwt_required()
 def incluir_usuario():
     try:
         dados_usuario = request.get_json()
@@ -56,7 +56,8 @@ def incluir_usuario():
         return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
     
 
-@jwt_required()
+#Deprecated
+#@jwt_required()
 def fazer_login():
     dados_login = request.get_json()
 

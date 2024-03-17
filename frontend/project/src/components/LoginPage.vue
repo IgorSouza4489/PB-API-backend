@@ -70,7 +70,7 @@ export default {
       this.showIframe = true;
       
       try {
-        const response = await api.post("/login", {
+        const response = await api.post("/login_api", {
           email: this.email,
           senha: this.senha,
         });

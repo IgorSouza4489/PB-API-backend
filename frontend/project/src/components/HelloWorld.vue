@@ -46,7 +46,7 @@
                :disabled="!registraHabilitado"
             />
             <div v-if="showIframe" class="overlay">
-              <iframe
+              <iframe :class="{'success': showIframe }" 
                 id="load"
                 src="https://lottie.host/embed/4a40d72c-2547-4f2a-909c-2044e6b7717e/xIffzuE3W0.json"
               ></iframe>
