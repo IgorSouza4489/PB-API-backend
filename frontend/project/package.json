@@ -9,10 +9,12 @@
   },
   "dependencies": {
     "@lottiefiles/vue-lottie-player": "^1.1.0",
+    "@types/jwt-decode": "^3.1.0",
     "axios": "^1.6.2",
     "core-js": "^3.8.3",
     "cypress": "^13.6.6",
     "eslint-plugin-cypress": "^2.15.1",
+    "jwt-decode": "^4.0.0",
     "mocha": "^10.3.0",
     "normalize.css": "^8.0.1",
     "vue": "^3.2.13",

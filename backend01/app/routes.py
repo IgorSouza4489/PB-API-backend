@@ -1,4 +1,4 @@
-from app.controllers.usuario_controller import obter_usuarios, incluir_usuario, fazer_login
+from app.controllers.usuario_controller import obter_usuarios, incluir_usuario, fazer_login, obter_usuario_id
 from app.controllers.postagem_controller import obter_postagens, criar_postagem, excluir_postagem, editar_postagem
 from app.controllers.curtida_controller import adicionar_curtida
 from app.controllers.auth_controller import registrar_usuario_api, fazer_login_api
@@ -6,6 +6,8 @@ from app.controllers.auth_controller import registrar_usuario_api, fazer_login_a
 
 def configure_routes(app):
     app.route("/usuarios", methods=['GET'])(obter_usuarios)
+
+    app.route("/obter_usuarios", methods=['GET'])(obter_usuario_id)
 
     app.route('/usuarios', methods=['POST'])(incluir_usuario)
 

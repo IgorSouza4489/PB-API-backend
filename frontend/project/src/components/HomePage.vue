@@ -96,6 +96,9 @@
 <script>
 import api from "./api";
 import CriarPostagem from "./CriarPostagem.vue";
+import { jwtDecode } from "jwt-decode";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 export default {
   name: "HomePage",
@@ -104,6 +107,8 @@ export default {
   },
   data() {
     return {
+      user: '',
+      id: '',
       postagens: [],
       termoPesquisa: "",
       usuario: {
@@ -113,6 +118,19 @@ export default {
     },
     };
   },
+  async created() {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      toast.error("Não tem token");
+    } else {
+        const decToken = jwtDecode(token);
+        const userId = decToken.sub; // Obtém o ID do usuário do token JWT
+
+        // Agora você pode chamar a função getUserData() com o ID do usuário
+        await this.getUserData(userId);
+    }
+},
+
   mounted() {
     this.getPostagens();
   },
@@ -125,9 +143,15 @@ export default {
         console.log(error);
       }
     },
-    async getUserAtual(){
-
-    },
+    async getUserData(userId) {
+    try {
+        const response = await api.get(`obter_usuarios?id=${userId}`);
+        this.usuario = response.data;
+        localStorage.setItem("user", JSON.stringify(this.usuario));
+    } catch (error) {
+        console.error(error);
+    }
+  },
     formatarData(data) {
       const dataObj = new Date(data);
       return `${dataObj.toLocaleDateString()} ${dataObj.toLocaleTimeString()}`;

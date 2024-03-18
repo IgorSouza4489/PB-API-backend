@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from app.models import db, Usuario, Postagem, Curtida, PostagemUsuario
+from app.models import db, Usuario, Postagem, Curtida
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -11,13 +11,13 @@ HTTP_BAD_REQUEST = 400
 HTTP_UNAUTHORIZED = 401
 HTTP_SERVER_ERROR = 500
 
-@jwt_required()
+
 def obter_postagens():
     id = request.args.get('id')
     nome_autor = request.args.get('nome_autor')
 
     if id:
-        postagens = Postagem.query.filter_by(id=id).first()
+        postagens = Postagem.query.filter(Postagem.usuario_id == id).all()
     elif nome_autor:
         postagens = Postagem.query.filter_by(nome_autor=nome_autor).all()
     else:
@@ -28,12 +28,12 @@ def obter_postagens():
         'titulo': postagem.titulo,
         'texto': postagem.texto,
         'nome_autor': postagem.nome_autor,
+        'usuario_id': postagem.usuario_id,
         'datahora_postagem': postagem.datahora_postagem.strftime("%Y-%m-%d %H:%M:%S")
     } for postagem in postagens]
 
-    return jsonify({'postagens': postagens_json}), HTTP_OK
+    return jsonify({'postagens': postagens_json}), 200
 
-@jwt_required()
 def criar_postagem():
     try:
         dados_postagem = request.get_json()
@@ -42,18 +42,11 @@ def criar_postagem():
             titulo=dados_postagem['titulo'],
             texto=dados_postagem['texto'],
             nome_autor=dados_postagem['nome_autor'],
+            usuario_id=dados_postagem['usuario_id'],
             datahora_postagem=datetime.utcnow()
         )
 
         db.session.add(nova_postagem)
-        db.session.commit()
-
-        nova_relacao = PostagemUsuario(
-            usuario_id=dados_postagem['usuario_id'],
-            postagem_id=nova_postagem.id
-        )
-
-        db.session.add(nova_relacao)
         db.session.commit()
 
         return jsonify({'mensagem': 'Postagem criada com sucesso!'}), HTTP_CREATED

@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from app.models import db, Usuario, Postagem, Curtida, PostagemUsuario
+from app.models import db, Usuario, Postagem, Curtida
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_jwt_extended import jwt_required, get_jwt_identity

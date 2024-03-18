@@ -90,7 +90,7 @@ export default {
     async register() {
       this.showIframe = true
       try {
-        const response = await api.post("/usuarios", {
+        const response = await api.post("/registro_api", {
           nome: this.nome,
           email: this.email,
           data_nascimento:'01/01/2022' /*new Date(this.data_nascimento)*/,

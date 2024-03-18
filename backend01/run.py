@@ -15,6 +15,13 @@ def create_app():
     jwt = JWTManager(app)
     bcrypt = Bcrypt(app)
 
+    # Adicionar Access-Control-Allow-Origin à resposta
+    @app.after_request
+    def add_cors_headers(response):
+        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+        return response
+
     return app
 
 app = create_app()

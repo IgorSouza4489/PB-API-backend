@@ -3,26 +3,23 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     data_nascimento = db.Column(db.Date, nullable=False)
     senha = db.Column(db.String(80), nullable=False)
-
+    postagens = db.relationship('Postagem', backref='autor', lazy=True)
 
 class Postagem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(80), nullable=False)
     texto = db.Column(db.Text, nullable=False)
     nome_autor = db.Column(db.String(50), nullable=False)
-    datahora_postagem = db.Column(db.DateTime, nullable=False)
+    datahora_postagem = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     usuarios_curtiram = db.relationship('Curtida', backref='postagem', lazy='dynamic')
-    #Delecao em Cascata
     curtidas = db.relationship('Curtida', backref='postagem_relacionada', cascade='all, delete-orphan')
-    postagens_usuario = db.relationship('PostagemUsuario', backref='postagem_usuario_relacionada', cascade='all, delete-orphan')
-
 
 class UserApi(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,17 +30,7 @@ class UserApi(db.Model):
     def __repr__(self):
         return f"User('{self.username}', '{self.created_at}')"
 
-
-# RELACIONAMENTOS
-
 class Curtida(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     postagem_id = db.Column(db.Integer, db.ForeignKey('postagem.id'))
-
-
-class PostagemUsuario(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
-    postagem_id = db.Column(db.Integer, db.ForeignKey('postagem.id', ondelete='CASCADE'))
-    

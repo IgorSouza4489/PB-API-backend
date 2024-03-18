@@ -73,7 +73,11 @@ export default {
         const response = await api.post("/login_api", {
           email: this.email,
           senha: this.senha,
+          
         });
+        const access_token = response.data.access_token;
+        localStorage.setItem('access_token', access_token); 
+
         console.log(response.data);
         setTimeout(() => {
         this.showIframe = false;

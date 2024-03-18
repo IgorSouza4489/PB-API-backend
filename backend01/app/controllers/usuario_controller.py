@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from app.models import db, Usuario, Postagem, Curtida, PostagemUsuario
+from app.models import db, Usuario, Postagem, Curtida
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -12,8 +12,27 @@ HTTP_BAD_REQUEST = 400
 HTTP_UNAUTHORIZED = 401
 HTTP_SERVER_ERROR = 500
 
+def obter_usuario_id():
+    requested_user_id = request.args.get('id')
 
-@jwt_required()
+    if not requested_user_id:
+        return jsonify({'message': 'Por favor, forneça o ID do usuário'}), 400
+
+    usuario = Usuario.query.filter_by(id=requested_user_id).first()
+
+    if not usuario:
+        return jsonify({'message': 'Usuário não encontrado'}), 404
+
+    usuario_json = {
+        'id': usuario.id,
+        'nome': usuario.nome,
+        'email': usuario.email,
+        'data_nascimento': usuario.data_nascimento,
+    }
+
+    return jsonify({'usuario': usuario_json}), 200
+
+#@jwt_required()
 def obter_usuarios():
     nome = request.args.get('nome')
     email = request.args.get('email')
@@ -28,7 +47,8 @@ def obter_usuarios():
     usuarios_json = [{
         'id': user.id, 'nome': user.nome,
         'email': user.email,
-        'data_nascimento': user.data_nascimento
+        'data_nascimento': user.data_nascimento,
+        'senha': user.senha
     } for user in usuarios]
     
     return jsonify({'usuarios': usuarios_json}), HTTP_OK
