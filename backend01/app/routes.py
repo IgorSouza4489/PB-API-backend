@@ -1,6 +1,6 @@
 from app.controllers.usuario_controller import obter_usuarios, incluir_usuario, fazer_login, obter_usuario_id
 from app.controllers.postagem_controller import obter_postagens, criar_postagem, excluir_postagem, editar_postagem
-from app.controllers.curtida_controller import adicionar_curtida
+from app.controllers.curtida_controller import adicionar_curtida, obter_curtidas
 from app.controllers.auth_controller import registrar_usuario_api, fazer_login_api
 
 
@@ -21,7 +21,9 @@ def configure_routes(app):
 
     app.route('/postagens/<int:id_postagem>', methods=['PUT'])(editar_postagem)
 
-    app.route('/postagens/<int:id_postagem>/curtidas', methods=['POST'])(adicionar_curtida)
+    app.route('/postagens/curtidas/<int:id_postagem>', methods=['POST'])(adicionar_curtida)
+
+    app.route('/postagens/curtidas/<int:id_postagem>', methods=['GET'])(obter_curtidas)
 
     #Auth API
     app.route("/registro_api", methods=['POST'])(registrar_usuario_api)

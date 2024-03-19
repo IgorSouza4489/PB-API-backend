@@ -28,6 +28,9 @@
               id="btn"
               value="Entrar"
             />
+            <div id = "lowKey">
+                <a @click="navegarParaRegistro" id="">Não tem uma conta? Clique aqui!</a>
+            </div>
             <div v-if="showIframe" class="overlay">
               <iframe :class="{'success': showIframe }" 
                 id="load"
@@ -67,34 +70,41 @@ export default {
   created() {},
   methods: {
     async login() {
-      this.showIframe = true;
-      
-      try {
-        const response = await api.post("/login_api", {
-          email: this.email,
-          senha: this.senha,
-          
-        });
-        const access_token = response.data.access_token;
-        localStorage.setItem('access_token', access_token); 
+  this.showIframe = true;
+  
+  try {
+    const response = await api.post("/login_api", {
+      email: this.email,
+      senha: this.senha,
+    });
 
-        console.log(response.data);
-        setTimeout(() => {
-        this.showIframe = false;
-        toast.success("Seja bem vindo!");
-        this.$router.push({
-          path: "/HomePage",
-          //query: {id: tipo}
-        });
-      }, 1500);
-        
-      } catch (error) {
-        this.erro = true;
-        toast.error("Ocorreu algum erro ao tentar entrar, verifique suas credenciais");
-        this.showIframe = false;
-      }
+    const access_token = response.data.access_token;
+    localStorage.setItem('access_token', access_token); 
+
+    console.log(response.data);
+    setTimeout(() => {
+      this.showIframe = false;
+      toast.success("Seja bem vindo!");
+      this.$router.push({
+        path: "/HomePage",
+      });
+    }, 1500);
       
-    },
+  } catch (error) {
+    this.showIframe = false;
+    
+    if (error.response && error.response.status === 401) {
+      toast.error("Credenciais inválidas. Verifique seu email e senha.");
+    } else if (error.response && error.response.status === 404) {
+      toast.error("Usuário não encontrado");
+    } else {
+      toast.error("Ocorreu um erro ao tentar entrar. Tente novamente mais tarde.");
+    }
+  }
+},
+navegarParaRegistro(){
+      this.$router.push({path: '/'})
+    }
   },
 };
 </script>

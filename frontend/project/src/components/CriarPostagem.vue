@@ -25,6 +25,7 @@
 
 <script>
 import api from "./api";
+import { jwtDecode } from "jwt-decode";
 
 export default {
   name: "CriarPostagem",
@@ -32,8 +33,19 @@ export default {
     return {
       titulo: "",
       texto: "",
+      usuario_id: '',
     };
   },
+  async created() {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      console.log('Sem token')
+    } else {
+        const decToken = jwtDecode(token);
+        const userId = decToken.sub; 
+        this.usuario_id = userId
+    }
+},
   methods: {
     async criarPostagem() {
       try {
@@ -41,6 +53,7 @@ export default {
           titulo: this.titulo,
           texto: this.texto,
           nome_autor: "autor",
+          usuario_id: this.usuario_id,
         });
         this.$router.push({
           path: "/HomePage",

@@ -11,7 +11,7 @@ HTTP_BAD_REQUEST = 400
 HTTP_UNAUTHORIZED = 401
 HTTP_SERVER_ERROR = 500
 
-@jwt_required()
+#@jwt_required()
 def adicionar_curtida(id_postagem):
     try:
         postagem = Postagem.query.get(id_postagem)
@@ -33,6 +33,19 @@ def adicionar_curtida(id_postagem):
         db.session.commit()
 
         return jsonify({'mensagem': 'Curtida adicionada com sucesso'}), HTTP_CREATED
+
+    except Exception as e:
+        return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
+
+#@jwt_required()
+def obter_curtidas(id_postagem):
+    try:
+        postagem = Postagem.query.get(id_postagem)
+        if not postagem:
+            return jsonify({'erro': 'Postagem não encontrada'}), HTTP_NOT_FOUND
+
+        curtidas = [curtida.usuario_id for curtida in postagem.curtidas]
+        return jsonify({'curtidas': curtidas}), HTTP_OK
 
     except Exception as e:
         return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR

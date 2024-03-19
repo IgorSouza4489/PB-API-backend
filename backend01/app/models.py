@@ -34,3 +34,10 @@ class Curtida(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     postagem_id = db.Column(db.Integer, db.ForeignKey('postagem.id'))
+
+class Comentario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    texto = db.Column(db.Text, nullable=False)
+    nome_autor = db.Column(db.String(50), nullable=False)
+    datahora_postagem = db.Column(db.DateTime, nullable=False)
+    postagem_id = db.Column(db.Integer, db.ForeignKey('postagem.id', ondelete='CASCADE'))

@@ -11,7 +11,7 @@ HTTP_BAD_REQUEST = 400
 HTTP_UNAUTHORIZED = 401
 HTTP_SERVER_ERROR = 500
 
-
+#@jwt_required()
 def obter_postagens():
     id = request.args.get('id')
     nome_autor = request.args.get('nome_autor')
@@ -33,7 +33,7 @@ def obter_postagens():
     } for postagem in postagens]
 
     return jsonify({'postagens': postagens_json}), 200
-
+@jwt_required()
 def criar_postagem():
     try:
         dados_postagem = request.get_json()

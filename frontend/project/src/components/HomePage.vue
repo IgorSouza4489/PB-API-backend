@@ -2,14 +2,14 @@
   <div style="text-align:center !important; ">
      <div id="sidebar-header">
     <nav class="navbar navbar-expand-lg navbar-light ">
-  <a class="navbar-brand" href="#">receitas.py</a>
+  <a class="navbar-brand" href="#">CookVerse</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="#"><router-link to="/feed">Feed</router-link><span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="#"><router-link to="/HomePage">Feed</router-link><span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#"><router-link to="/minha-conta">Minha Conta</router-link></a>
@@ -87,6 +87,13 @@
           <p>{{ postagem.texto }}</p>
           <p>{{ formatarData(postagem.datahora_postagem) }}</p>
         </div>
+        <div class="post-footer">
+        <button id="curtida" @click="curtirPostagem(postagem)" :disabled="postagem.curtido" class="btn btn-circle btn-orange">
+          <i class="fas fa-thumbs-up"></i>
+        </button>
+        <span>{{ postagem.curtidas }} curtidas</span>
+      </div>
+
       </div>
     </div>
 
@@ -115,7 +122,8 @@ export default {
         nome: "Igor Santos",
         idade: 25,
         email: "igor@gmail.com"
-    },
+      },
+      userId: null, // Adicionando userId como variável de dados
     };
   },
   async created() {
@@ -123,13 +131,11 @@ export default {
     if (!token) {
       toast.error("Não tem token");
     } else {
-        const decToken = jwtDecode(token);
-        const userId = decToken.sub; // Obtém o ID do usuário do token JWT
-
-        // Agora você pode chamar a função getUserData() com o ID do usuário
-        await this.getUserData(userId);
+      const decToken = jwtDecode(token);
+      this.userId = decToken.sub; // Armazenando o ID do usuário atual
+      await this.getUserData(this.userId);
     }
-},
+  },
 
   mounted() {
     this.getPostagens();
@@ -144,22 +150,34 @@ export default {
       }
     },
     async getUserData(userId) {
-    try {
+      try {
         const response = await api.get(`obter_usuarios?id=${userId}`);
         this.usuario = response.data;
         localStorage.setItem("user", JSON.stringify(this.usuario));
-    } catch (error) {
+      } catch (error) {
         console.error(error);
-    }
-  },
+      }
+    },
     formatarData(data) {
       const dataObj = new Date(data);
       return `${dataObj.toLocaleDateString()} ${dataObj.toLocaleTimeString()}`;
     },
+    async curtirPostagem(postagem) {
+      try {
+        const requestBody = { usuario_id: this.userId }; // Usando o userId aqui
+        await api.post(`/postagens/curtidas/${postagem.id}`, requestBody);
+        
+        // Atualiza o número de curtidas e define que a postagem foi curtida
+        postagem.curtidas++;
+        //postagem.curtido = true;
+        
+      } catch (error) {
+        console.error(error);
+      }
+    },
     sair() {
       console.log("Usuário saiu");
     },
-
   },
 };
 </script>
@@ -279,22 +297,22 @@ a{
   #sidebar2{
     display: none;
   }
+
+  .post-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
+.post-footer button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+}
 
 
 #sidebar2 {
@@ -340,5 +358,33 @@ a{
   color: #000000;
   
 }
+
+.post-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.btn-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #ff7b00;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-circle:hover {
+  background-color: #fc9c43;
+}
+
+#curtida {
+  margin-right: 15px !important;
+}
+
 
 </style>
