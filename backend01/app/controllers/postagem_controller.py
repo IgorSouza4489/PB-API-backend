@@ -3,6 +3,7 @@ from app.models import db, Usuario, Postagem, Curtida
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_jwt_extended import jwt_required, get_jwt_identity
+import replicate
 
 HTTP_OK = 200
 HTTP_CREATED = 201
@@ -33,13 +34,16 @@ def obter_postagens():
     } for postagem in postagens]
 
     return jsonify({'postagens': postagens_json}), 200
+
 @jwt_required()
 def criar_postagem():
     try:
         dados_postagem = request.get_json()
+        url_img = gerar_img(dados_postagem['texto'])
 
         nova_postagem = Postagem(
             titulo=dados_postagem['titulo'],
+            url_img=url_img,
             texto=dados_postagem['texto'],
             nome_autor=dados_postagem['nome_autor'],
             usuario_id=dados_postagem['usuario_id'],
@@ -89,3 +93,29 @@ def editar_postagem(id_postagem):
 
     except Exception as e:
         return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
+    
+def gerar_img(txt_receita):
+    try:
+        output = replicate.run(
+            "stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4",
+            input={
+                    "prompt": f"Close de cima de um prato redondo e branco, com espaço suficiente para ilustração detalhada da receita culinária. Dentro do prato, uma ilustração vibrante e convidativa retrata os ingredientes dispostos em camadas, conforme a seguinte receita culinária: {txt_receita}",
+                    "width": 1024,
+                    "height": 1024,
+                    "refine": "no_refiner",
+                    "scheduler": "K_EULER",
+                    "lora_scale": 0.6,
+                    "num_outputs": 1,
+                    "guidance_scale": 7.5,
+                    "apply_watermark": False,
+                    "high_noise_frac": 0.8,
+                    "negative_prompt": "",
+                    "prompt_strength": 0.8
+                    }
+            )
+        img_url = output[0]
+    except Exception as e:
+        img_url = "https://cdn-icons-png.flaticon.com/512/1627/1627224.png"
+        print(e)
+
+    return img_url
