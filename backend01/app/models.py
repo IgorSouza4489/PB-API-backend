@@ -19,9 +19,12 @@ class Postagem(db.Model):
     texto = db.Column(db.Text, nullable=False)
     nome_autor = db.Column(db.String(50), nullable=False)
     datahora_postagem = db.Column(db.DateTime, nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     usuarios_curtiram = db.relationship('Curtida', backref='postagem', lazy='dynamic')
     #Delecao em Cascata
     curtidas = db.relationship('Curtida', backref='postagem_relacionada', cascade='all, delete-orphan')
+    comentarios = db.relationship('Comentario', backref='postagem', cascade='all, delete-orphan')
+
     postagens_usuario = db.relationship('PostagemUsuario', backref='postagem_usuario_relacionada', cascade='all, delete-orphan')
 
 

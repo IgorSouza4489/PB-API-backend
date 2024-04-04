@@ -1,7 +1,13 @@
 <template>
+
   <div id="container">
+
     <div id="barraZ">
       <div class="form-container">
+<div id="astronauta" class="form-group ">
+      <img src="https://github.com/vitorflopes/PB-API-backend/assets/63150786/14d1890d-a430-42bc-af1c-4eebf434f377" alt="Ícone" />
+      <h2 style="font-style: italic">Cookverse</h2>
+    </div>
         <form @submit.prevent="login">
           <div class="form-group">
             <h1>Login</h1>
@@ -40,6 +46,9 @@
           </div>
         </form>
       </div>
+    </div>
+    <div id="astronauta2" class="form-group d-lg-block">
+      <img src="https://github.com/vitorflopes/PB-API-backend/assets/63150786/14d1890d-a430-42bc-af1c-4eebf434f377" alt="Ícone" />
     </div>
   </div>
 </template>
@@ -125,6 +134,17 @@ body.overlay {
   justify-content: center;
   align-items: center;
   z-index: 999;
+}
+
+@media only screen and (min-width: 600px) {
+  #astronauta2 {
+    display: none !important;
+  }
+}
+@media only screen and (max-width: 600px) {
+  #astronauta {
+    display: none;
+  }
 }
 
 </style>

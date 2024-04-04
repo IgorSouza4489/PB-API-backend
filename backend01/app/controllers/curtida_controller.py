@@ -11,7 +11,7 @@ HTTP_BAD_REQUEST = 400
 HTTP_UNAUTHORIZED = 401
 HTTP_SERVER_ERROR = 500
 
-#@jwt_required()
+@jwt_required()
 def adicionar_curtida(id_postagem):
     try:
         postagem = Postagem.query.get(id_postagem)
@@ -37,7 +37,7 @@ def adicionar_curtida(id_postagem):
     except Exception as e:
         return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
 
-#@jwt_required()
+@jwt_required()
 def obter_curtidas(id_postagem):
     try:
         postagem = Postagem.query.get(id_postagem)
@@ -46,6 +46,46 @@ def obter_curtidas(id_postagem):
 
         curtidas = [curtida.usuario_id for curtida in postagem.curtidas]
         return jsonify({'curtidas': curtidas}), HTTP_OK
+
+    except Exception as e:
+        return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
+    
+@jwt_required
+def obter_postagens_mais_curtidas():
+    try:
+        postagens_mais_curtidas = db.session.query(Postagem, db.func.count(Curtida.id).label('num_curtidas')) \
+            .join(Curtida).group_by(Postagem.id).order_by(db.desc('num_curtidas')).limit(4).all()
+
+        postagens_curtidas_info = []
+        for postagem, num_curtidas in postagens_mais_curtidas:
+            postagens_curtidas_info.append({
+                'titulo': postagem.titulo,
+                'num_curtidas': num_curtidas,
+                'nome_autor': postagem.nome_autor,
+                'url_img': postagem.url_img
+            })
+
+        return jsonify({'postagens_mais_curtidas': postagens_curtidas_info}), HTTP_OK
+
+    except Exception as e:
+        return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR
+
+@jwt_required
+def obter_postagens_curtidas_mim(usuario_id):
+    try:
+        postagens_curtidas_mim = db.session.query(Postagem, db.func.count(Curtida.id).label('num_curtidas')) \
+            .join(Curtida).filter(Postagem.usuario_id == usuario_id) \
+            .group_by(Postagem.id).order_by(db.desc('num_curtidas')).limit(4).all()
+
+        postagens_curtidas_info = []
+        for postagem, num_curtidas in postagens_curtidas_mim:
+            postagens_curtidas_info.append({
+                'titulo': postagem.titulo,
+                'num_curtidas': num_curtidas,
+                'nome_autor': postagem.nome_autor,
+            })
+
+        return jsonify({'postagens_curtidas_mim': postagens_curtidas_info}), HTTP_OK
 
     except Exception as e:
         return jsonify({'erro': str(e)}), HTTP_SERVER_ERROR

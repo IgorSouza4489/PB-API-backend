@@ -88,30 +88,35 @@ export default {
   created() {},
   methods: {
     async register() {
-      this.showIframe = true
-      try {
-        const response = await api.post("/registro_api", {
-          nome: this.nome,
-          email: this.email,
-          data_nascimento:'01/01/2022' /*new Date(this.data_nascimento)*/,
-          senha: this.senha,
-        });
+  this.showIframe = true;
+  try {
+    const response = await api.post("/registro_api", {
+      nome: this.nome,
+      email: this.email,
+      data_nascimento: '01/01/2022', // new Date(this.data_nascimento)
+      senha: this.senha,
+    });
 
-        console.log(response.data);
-        toast.success("Conta criada com sucesso!");
-        this.$router.push({
-          path: "/LoginPage",
-          //query: {id: tipo}
-        });
-      } catch (error) {
-        this.erro = true;
-        toast.error("Erro ao criar conta", error);
-      }
-        setTimeout(() => {
-        this.showIframe = false;
-      }, 1500);
+    console.log(response.data);
+    toast.success("Conta criada com sucesso!");
+    this.$router.push({
+      path: "/LoginPage",
+      // query: { id: tipo }
+    });
+  } catch (error) {
+    this.erro = true;
+    if (error.response.status === 400) {
+      toast.error("Erro ao criar conta: Conta já existe.");
+    } else {
+      toast.error("Erro ao criar conta", error);
+    }
+  }
+  
+  setTimeout(() => {
+    this.showIframe = false;
+  }, 1500);
+},
 
-    },
     navegarParaLogin(){
       this.$router.push({path: '/LoginPage'})
     }
